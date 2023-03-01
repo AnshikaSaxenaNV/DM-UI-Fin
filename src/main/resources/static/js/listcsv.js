@@ -154,7 +154,7 @@ function deleteRow(el, sform) {
                 console.log(formMap);
                 $.ajax({
                     url: '/api/writeSec/' + selectedFileName,
-                    url: '/api/writeSec/' + selectedFileName,
+                    // url: '/api/writeSec/' + selectedFileName,
                     type: 'POST',
                     data: Object.fromEntries(formMap),
                     dataType: "json",
@@ -248,11 +248,12 @@ $(document).ready(function () {
                     // $('#view-r').html('<i class="bi bi-eye"></i>View Report</a>');
                     // $('#download-r').html('<i class="bi bi-download"></i>Download Report</a>');
 
-                    $('#report-details').append('<p id="record-no"></p>');
+                    $('#report-details').append('<p id="record-no"></p> <hr>');
                     //$('#report-details').append('<a href="../view" onclick="showReport()" value=' + selectedFileName + ' id="primary-report-view"><i class="bi bi-eye"></i>View Report</a>');
-                    $('#report-details').append('<a href="#" onclick="showReport(this.name)" class="mx-2" id="primary-report-view" name=' + selectedFileName + ' ><i class="bi bi-eye">View Report</a>')
+                    $('#report-details').append('<a href="#" onclick="showReport(this.name)" class="mx-2" id="primary-report-view" name=' + selectedFileName + ' ><i class="bi bi-eye-fill"></i>View Report</a>')
                     $('#report-details').append('<a href="#" onclick="downloadValidate(this.name)" id="validate-download-primary" name=' + selectedFileName + ' ><i class="bi bi-download"></i>Download Report</a>');
 
+                    
                     $.ajax({
                         url: '/api/validateSelect',
                         type: 'GET',
@@ -426,14 +427,16 @@ $(document).ready(function () {
 
                     $('#sreport-details').append('<p id="srecord-no"></p>');
                     //$('#report-details').append('<a href="../view" onclick="showReport()" value=' + selectedFileName + ' id="primary-report-view"><i class="bi bi-eye"></i>View Report</a>');
-                    $('#sreport-details').append('<a href="#" onclick="showReport(this.name)" id="secondary-report-view" name=' + selectFolderName + "/" + selectedFileName + '><i class="bi bi-eye"></i>View Report</a>')
+                    $('#sreport-details').append('<a href="#" onclick="showReport(this.name)" class="mx-2" id="secondary-report-view" name=' + selectFolderName + "/" + selectedFileName + '><i class="bi bi-eye-fill"></i>View Report</a>')
                     $('#sreport-details').append('<a href="#" onclick="downloadValidate(this.name)" id="validate-download-secondary" name=' + selectFolderName + "/" + selectedFileName + '><i class="bi bi-download"></i>Download Report</a>');
-                    if (keys["Count"] > 0) {
-                        $('#srecord-no').html(keys["Count"] + " error records found!");
+                    $('#messageOutputS').html(message[message.length - 2]);
+                        if (message[message.length - 1] > 0) {
+                            $('#srecord-no').html(message[message.length - 1] + " error records found!");
 
-                    } else {
-                        $('#srecord-no').html("0 error records found!");
-                    }
+                        } else {
+                            $('#srecord-no').html("0 error records found!");
+                        }
+                   
 
 
                     //var tr = document.createElement("tr");
@@ -441,7 +444,7 @@ $(document).ready(function () {
                     var td = document.createElement("td");
                     const i = document.createElement('i');
                     const j = document.createElement('i');
-                    i.className = "bi bi-eye";
+                    i.className = "bi bi-eye-fill";
                     j.className = "bi bi-download";
                     // li.appendChild(i);
                     // li.appendChild(document.createTextNode(selectedFileName));
@@ -450,8 +453,8 @@ $(document).ready(function () {
                     // li.appendChild(document.createTextNode("Download Report"));
                     // ul.appendChild(li);
                     // ul.insertBefore(i,li);
-                    tr += `<td><a href="#" onclick="showReport(this.name)" id="secondary-reports-view" name=` + selectFolderName + `"/"` + selectedFileName + `><i class="bi bi-eye"></i>` + ` ` + selectedFileName + `</a></td>`;
-                    tr += `<td><a href="#" onclick="downloadValidate(this.name)" id="secondary-reports-download" name=` + selectFolderName + `"/"` + selectedFileName + `><i class="bi bi-download"></i>` + ` ` + "Download Report" + `</a></td>`;
+                    tr += `<td><a href="#" onclick="showReport(this.name)" id="secondary-reports-view" name=` + selectFolderName + `/` + selectedFileName + `><i class="bi bi-eye-fill"></i>` + ` ` + selectedFileName + `</a></td>`;
+                    tr += `<td><a href="#" onclick="downloadValidate(this.name)" id="secondary-reports-download" name=` + selectFolderName + `/` + selectedFileName + `><i class="bi bi-download"></i>` + ` ` + "Download Report" + `</a></td>`;
                     tr += `</tr>`;
                     $('table').append(tr);
                     //document.getElementById("add-reports").innerHTML= tr;
@@ -531,15 +534,7 @@ $(document).ready(function () {
         var selectedFileName = $(this).val();
         console.log(selectedFileName);
         console.log(selectedFileName);
-        // const validatebtn = document.getElementById("validateBtn");
-        //var formsCollection = document.getElementsByTagName("form");
-
-        var f = []
-
-
-        const formm = new Map();
-        var dataModel = {};
-
+        
         for (var i = 0; i < document.forms.length; i++) {
             var foo = document.forms[i];
             var foo = document.forms[i];
@@ -620,7 +615,7 @@ $(function () {
         var value = $("#searchQueryInputValidate").val();
         var loc = "../api/entityValidate/";
         var result = document.querySelector('.output');
-        var element = document.getElementById("searchLink");
+        // var element = document.getElementById("searchLink");
         // element.style.visibility = "visible";       
         if (!value) {
             result.innerHTML = '';
@@ -652,7 +647,7 @@ $(function () {
         var loc = "../api/transforming/";
 
         var result = document.querySelector('.output');
-        var element = document.getElementById("searchLink");
+        // var element = document.getElementById("searchLink");
         // element.style.visibility = "visible";       
         if (!value) {
             result.innerHTML = '';
@@ -945,4 +940,414 @@ function changePassword() {
     } else {
         alert("Confirm Password not matched");
     }
+
+}    // show report for load
+
+function viewLoadReport(value) {
+    let table = document.getElementById("reportTable");
+    let ta = document.getElementById("reportTable1");
+    // var value = document.getElementById("primary-report-view").value;
+    console.log(value);
+
+
+    $.ajax({
+        type: "GET",
+        url: "/api/view-loadreports",
+        data: { 'loadEntity': value },
+        success: function (name) {
+            console.log("HHHH");
+            console.log(name[0]);
+            table_data = `<table style="width:auto;">`;
+            if (name[0] != null) {
+                for (const line in name[0]) {
+                    var list = name[0][line].split(",");
+                    if (line == 0) {
+                        table_data += `<tr>`;
+                        for (var i = 0; i < list.length; i++) {
+                            table_data += `<td colspan=2><b>` + list[i] + `</b></td>`;
+                        }
+
+                        table_data += `</tr>`;
+                    } else {
+
+                        table_data += `<tr>`;
+                        for (var i = 0; i < list.length; i++) {
+                            table_data += `<td class="report-col px-2 py-1">` + list[i] + `</td>`;
+                        }
+                        table_data += `</tr>`;
+                    }
+
+                }
+                table_data += `</table>`;
+                table.innerHTML = table_data;
+
+            }
+           
+
+              
+            
+            document.getElementById('id01').style.display = 'block';
+
+
+        }
+    });   
+};
+
+// delete user
+function deleteUser(el) {
+    var username = el;
+    console.log(el);
+    swal({
+        title: "Are you sure?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                swal("Your record has been deleted!", {
+                    icon: "success",
+                });
+                $.ajax({
+                    url: '/api/deleteUser',
+                    type: 'GET',
+                    data: {'username':username},
+                    // dataType: "json",                    
+                    success: function (formMap) {
+                        console.log("hello"+formMap);
+                        setTimeout(() => {
+                            document.location.reload();
+                          }, 1000);
+                    }
+                })
+            } else {
+                swal("Your record is safe!");
+            }
+        });
+    return false;
+}
+
+// edit user
+function editUser(el) {
+    var username = el;
+    console.log(el);
+    swal({
+        title: "Are you sure?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                swal("Your record has been deleted!", {
+                    icon: "success",
+                });
+                $.ajax({
+                    url: '/api/editUser',
+                    type: 'GET',
+                    data: {'username':username},
+                    // dataType: "json",                    
+                    success: function (formMap) {
+                        console.log("hello"+formMap);
+                        setTimeout(() => {
+                            document.location.reload();
+                          }, 1000);
+                    }
+                })
+            } else {
+                swal("Your record is safe!");
+            }
+        });
+    return false;
+}
+// User edit Popup Script
+function openEditForm() {
+    document.getElementById("popupForm").style.display = "block";
+}
+function closeForm() {
+    document.getElementById("popupForm").style.display = "none";
+}
+
+// edit user
+function editUser(el) {
+    var userid = el;
+    $.ajax({
+        url: '/api/getUser/' + userid,
+        type: 'GET',
+        dataType: "json",
+        success: function (users) {
+            // console.log(typeof (users));            
+            const map = new Map(Object.entries(users));
+            console.log(map);
+            var user_roles = new Array();
+            var v;
+            // get role            
+            $.ajax({
+                url: '/api/fetchRole',
+                type: 'GET',
+                dataType: "json",
+                success: function (role) {
+                    // console.log(Object.entries(role));                    
+                    user_roles = role;
+                    console.log("Hello" + "" + user_roles);
+                    // return user_roles;                    // $('#userRole').append("<option>BMW</option>")                   
+                     let table = '<table>';
+                    for (const [key, value] of map) {
+                        let k = key;
+                        let m = Object.entries(value);
+                        for (const [key, value] of m) {
+                            console.log(key + "" + value);
+                            if (key != "password" && key != "security_question" && key != "security_answer") {
+                                table = table + `<tr>`;
+                                table = table + `<td>` + key + `</td>`;
+                                if (key == "role") {
+                                    table = table + `<td><select id="userRole" name="userRole"><option>` + value + `</option></select></td>`;
+                                    v = value;
+                                }
+                                else {
+                                    // table = table + `<td><input readonly="true" type="text" value="` + value + `">` + `</td>`;                                   
+                                     table = table + `<td><input readonly="true" type="text" value="` + value + `" name="`+key+`">` + `</td>`;
+                                }
+                                // table = table + `<td><input type="text" value="`+ value+`">`+`</td>`;                                
+                                table += `</tr>`;
+                            }
+                        }
+                        table += "</table>";
+                        openEditForm();
+                        document.getElementById("user_table").innerHTML = table;
+                        for (var i = 0; i < user_roles.length; i++) {
+                            console.log(i);
+                            if (user_roles[i] != v) {
+                                var option = document.createElement("option");
+                                option.text = user_roles[i];
+                                option.value = user_roles[i];
+                                var select = document.getElementById("userRole");
+                                console.log(user_roles[i]);
+                                select.append(option);
+                            }
+                        }
+                    }
+                }
+            })
+        }
+    })
+    return false;
+}
+//view tranmsform reports
+function showTransformReport(entityTransform) {
+    console.log(entityTransform);
+    $.ajax({
+        type: "GET",
+        url: "/api/transforming/view-reports",
+        data: { 'entityTransform': entityTransform },
+        success: function (response) {
+            console.log(response);
+            var removeChild = document.getElementById('addReportTab');
+            removeChild.replaceChildren();
+            for (var j = 0; j < response.length; j++) {
+                if (j % 2 == 0 && response[j] != null) {
+                    $('#addReportTab').append('<button class="tablink w3-bar-item w3-button" onclick="openReport(event,\'' + response[j] + '\')">' + response[j] + '</button>')
+                } else {
+                    $('#reportsList').append('<div id="' + response[j - 1] + '" class="w3-container report"><div id="reportTable' + j + '" class="table-wrapper-scroll-x table-wrapper-scroll-y my-custom-scrollbar"></div></div>');
+                    let table = document.getElementById("reportTable" + j);
+                    table_data = `<table>`;
+                    for (const line in response[j]) {
+                        console.log(typeof (line));
+                        var list = response[j] && response[j][line] && response[j][line].split(",");
+                                             
+                            table_data += `<tr>`;
+                        for (var i = 0; i < list.length; i++) {
+                            table_data += `<td colspan=2 class="report-col px-2 py-1">` + list[i] + `</td>`;
+                        }
+                        table_data += `</tr>`;                   
+                    }
+                    table_data += `</table>`;
+                    table.innerHTML = table_data;
+                    removeChild.firstChild.classList.add("active");
+                    removeChild.firstChild.classList.add("w3-light-grey");
+                    var reportData = document.getElementById('reportsList');
+                    let children = reportData.children;
+                    for (let i = 0; i < children.length; i++) {
+                        if(i==1){
+                            children[i].style.display = "block";
+                        }else{
+                        children[i].style.display = "none";
+                        }
+                    }
+                    document.getElementById('id01').style.display = 'block';
+                }
+            }
+        }
+    });
+}
+
+//For report tab
+function TransformReport(entityToView) {
+    $.ajax({
+        type: "GET",
+        url: "/api/reports/transform",
+        data: { 'entityToView': entityToView },
+        success: function (response) {
+            console.log(response);
+            var removeChild = document.getElementById('addReportTab');
+            $('#headingTab').html("Transform Records");
+            removeChild.replaceChildren();
+            for (var j = 0; j < response.length; j++) {
+                if (j % 2 == 0 && response[j] != null) {
+                    $('#addReportTab').append('<button class="tablink w3-bar-item w3-button" onclick="openReport(event,\'' + response[j] + '\')">' + response[j] + '</button>')
+                } else {
+                    $('#reportsList').append('<div id="' + response[j - 1] + '" class="w3-container report"><div id="reportTable' + j + '" class="table-wrapper-scroll-x table-wrapper-scroll-y my-custom-scrollbar"></div></div>');
+                    let table = document.getElementById("reportTable" + j);
+                    table_data = `<table>`;
+                    for (const line in response[j]) {
+                        console.log(typeof (line));
+                        var list = response[j] && response[j][line] && response[j][line].split(",");
+                        table_data += `<tr>`;
+                        for (var i = 0; i < list.length; i++) {
+                            table_data += `<td colspan=2 class="report-col px-2 py-1">` + list[i] + `</td>`;
+                        }
+                        table_data += `</tr>`;
+                    }
+                    table_data += `</table>`;
+                    table.innerHTML = table_data;
+                    removeChild.firstChild.classList.add("active");
+                    removeChild.firstChild.classList.add("w3-light-grey");
+                    var reportData = document.getElementById('reportsList');
+                    let children = reportData.children;
+                    for (let i = 0; i < children.length; i++) {
+                        if(i==1){
+                            children[i].style.display = "block";
+                        }else{
+                        children[i].style.display = "none";
+                        }
+                    }
+                    document.getElementById('id01').style.display = 'block';
+                }
+            }
+        }
+    });
+}
+function ValidateReport(entityToView) {
+    $.ajax({
+        type: "GET",
+        url: "/api/reports/validate",
+        data: { 'entityToView': entityToView },
+        success: function (response) {
+            console.log(response);
+            var removeChild = document.getElementById('addReportTab');
+            $('#headingTab').html("Validate Records");
+            removeChild.replaceChildren();
+            for (var j = 0; j < response.length; j++) {
+                if (j % 2 == 0 && response[j] != null) {
+                    $('#addReportTab').append('<button class="tablink w3-bar-item w3-button" onclick="openReport(event,\'' + response[j] + '\')">' + response[j] + '</button>')
+                } else {
+                    $('#reportsList').append('<div id="' + response[j - 1] + '" class="w3-container report"><div id="reportTable' + j + '" class="table-wrapper-scroll-x table-wrapper-scroll-y my-custom-scrollbar"></div></div>');
+                    let table = document.getElementById("reportTable" + j);
+                    table_data = `<table>`;
+                    for (const line in response[j]) {
+                        console.log(typeof (line));
+                        var list = response[j] && response[j][line] && response[j][line].split(",");
+                        table_data += `<tr>`;
+                        for (var i = 0; i < list.length; i++) {
+                            table_data += `<td colspan=2 class="report-col px-2 py-1">` + list[i] + `</td>`;
+                        }
+                        table_data += `</tr>`;
+                    }
+                    table_data += `</table>`;
+                    table.innerHTML = table_data;
+                    removeChild.firstChild.classList.add("active");
+                    removeChild.firstChild.classList.add("w3-light-grey");
+                    var reportData = document.getElementById('reportsList');
+                    let children = reportData.children;
+                    for (let i = 0; i < children.length; i++) {
+                        if(i==1){
+                            children[i].style.display = "block";
+                        }else{
+                        children[i].style.display = "none";
+                        }
+                    }
+                    document.getElementById('id01').style.display = 'block';
+                }
+            }
+        }
+    });
+}
+function tabDownloadTransform(entityToView) {
+    $.ajax({
+        type: "GET",
+        url: "/api/reports-download/transform",
+        data: { 'entityToView': entityToView  },
+        success: function (name) {
+            console.log(name);
+        }
+    });
+}
+function tabDownloadValidate(entityToView) {
+    $.ajax({
+        type: "GET",
+        url: "/api/reports-download/validate",
+        data: { 'entityToView': entityToView  },
+        success: function (name) {
+            console.log(name);
+        }
+    });
+}
+
+
+//view load reports
+
+function LoadReport(entityToView) {
+    $.ajax({
+        type: "GET",
+        url: "/api/reports/load",
+        data: { 'entityToView': entityToView },
+        success: function (response) {
+            console.log(response);
+            var removeChild = document.getElementById('addReportTab');
+            $('#headingTab').html("Load Records");
+            removeChild.replaceChildren();
+            for (var j = 0; j < response.length; j++) {
+                if (j % 2 == 0 && response[j] != null) {
+                    $('#addReportTab').append('<button class="tablink w3-bar-item w3-button" onclick="openReport(event,\'' + response[j] + '\')">' + response[j] + '</button>')
+                } else {
+                    $('#reportsList').append('<div id="' + response[j - 1] + '" class="w3-container report"><div id="reportTable' + j + '" class="table-wrapper-scroll-x table-wrapper-scroll-y my-custom-scrollbar"></div></div>');
+                    let table = document.getElementById("reportTable" + j);
+                    table_data = `<table>`;
+                    for (const line in response[j]) {
+                        console.log(typeof (line));
+                        var list = response[j] && response[j][line] && response[j][line].split(",");
+                        table_data += `<tr>`;
+                        for (var i = 0; i < list.length; i++) {
+                            table_data += `<td colspan=2 class="report-col px-2 py-1">` + list[i] + `</td>`;
+                        }
+                        table_data += `</tr>`;
+                    }
+                    table_data += `</table>`;
+                    table.innerHTML = table_data;
+                    removeChild.firstChild.classList.add("active");
+                    removeChild.firstChild.classList.add("w3-light-grey");
+                    var reportData = document.getElementById('reportsList');
+                    let children = reportData.children;
+                    for (let i = 0; i < children.length; i++) {
+                        if(i==1){
+                            children[i].style.display = "block";
+                        }else{
+                        children[i].style.display = "none";
+                        }
+                    }
+                    document.getElementById('id01').style.display = 'block';
+                }
+            }
+        }
+    });
+}
+function tabDownloadLoad(entityToView) {
+    $.ajax({
+        type: "GET",
+        url: "/api/reports-download/Load",
+        data: { 'entityToView': entityToView  },
+        success: function (name) {
+            console.log(name);
+        }
+    });
 }
